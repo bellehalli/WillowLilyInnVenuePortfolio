@@ -13,6 +13,44 @@
   --pad: clamp(1.35rem, 5vw, 5.5rem);
   --shadow: 0 2rem 5rem rgba(23, 37, 28, 0.16);
 }
+[hidden]{display:none!important}
+.status-toast{position:fixed;z-index:500;left:50%;bottom:5rem;transform:translateX(-50%);background:#26382d;color:#fff;padding:1rem 1.5rem;max-width:min(90vw,42rem);box-shadow:0 8px 35px #0003}
+.video-control{position:absolute;z-index:3;right:1.5rem;top:6.5rem;background:#26382dcc;color:#fff;border:1px solid #fff9;padding:.7rem;cursor:pointer}
+.content-start{padding-top:10rem}
+.content-title{font:500 clamp(2.8rem,6vw,6rem)/1.02 var(--serif);margin:.8rem 0 2rem}
+.search-label{display:block;max-width:38rem}
+.search-label input,.qualification-fields input,.qualification-fields select,.tour-date select,.flexible-search select,.lead-toolbar select,[data-story-filter],[data-vendor-filter]{padding:.75rem;border:1px solid #8d9187;background:#fff;color:#252521;max-width:100%;font-size:1rem}
+.search-label input{display:block;width:100%;margin-top:.6rem}
+.faq-list{max-width:65rem;margin:2rem 0}
+.faq-list details{border-top:1px solid #a6aa9f;padding:1.2rem 0}
+.faq-list summary{font:500 1.7rem/1.3 var(--serif);cursor:pointer}
+.table-scroll{overflow-x:auto;margin:2rem 0}
+table{width:100%;border-collapse:collapse;text-align:left}
+td,th{padding:1rem;border-bottom:1px solid #abaea4}
+caption{text-align:left;margin:1rem 0}
+.date-search .qualification-fields,.date-search .capacity-note{grid-column:1/-1}
+.flexible-search{padding:1.5rem 2rem;border-bottom:1px solid #abaea4}
+.flexible-search form{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;padding-top:1rem}
+.flexible-search p{flex-basis:100%}
+.lead-toolbar{display:flex;justify-content:space-between;gap:1rem;margin:1.5rem 0}
+.lead-card dl{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.lead-card dt{font-size:.9rem;color:#505b51}
+.lead-card dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.lead-contact p{overflow-wrap:anywhere}
+.journey-card ol{max-height:48rem;overflow:auto}
+.sample-note,.capacity-note{font-size:.95rem}
+.tour-summary{grid-template-columns:1fr}
+.tour-summary dl{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tour-confirmation{padding-top:5rem}
+[data-fill-demo]{margin:1rem;background:transparent;cursor:pointer}
+.season-context{padding:1rem;background:#e9e2d7}
+.kicker{font-size:.8rem}
+.menu-trigger,.header-action,.text-link,.button{font-size:.8rem}
+.wordmark span{font-size:.65rem}
+.hotspot{min-width:44px;min-height:44px}
+.choice-card input:focus-visible+span,.package-choices input:focus-visible+span,.season-choices input:focus-visible+span,.date-mode input:focus-visible+span,.slot-grid input:focus-visible+span{outline:3px solid #ac6a35;outline-offset:3px}
+.image-choice-grid label:has(input:focus-visible){outline:3px solid #ac6a35;outline-offset:3px}
+@media(max-width:700px){.content-start{padding-top:8rem}.lead-toolbar{flex-direction:column}.tour-summary dl{grid-template-columns:1fr 1fr}.date-search .qualification-fields{grid-template-columns:1fr}.lead-card dl{grid-template-columns:1fr}.tour-confirmation{padding-top:5rem}.video-control{top:5.5rem}.site-header{gap:.6rem}.site-header .header-action{font-size:.7rem}.site-header .wordmark{font-size:1.35rem}.site-header .menu-trigger{font-size:.75rem}}
 * {
   box-sizing: border-box;
 }
@@ -120,6 +158,11 @@ textarea {
   border-color: currentColor;
 }
 .text-link {
+  background: transparent;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  cursor: pointer;
   display: inline-flex;
   gap: 0.8rem;
   align-items: center;
@@ -1485,6 +1528,7 @@ textarea {
   margin-top: 2rem;
 }
 .celebration-mark {
+  pointer-events: none;
   position: absolute;
   right: -2rem;
   bottom: -5rem;
@@ -2570,7 +2614,10 @@ textarea {
     padding: 1rem;
   }
   .dashboard-header .demo-badge {
-    display: none;
+    display: block;
+    grid-column: 1/-1;
+    grid-row: 2;
+    justify-self: start;
   }
   .dashboard-main {
     padding: 2rem 1rem 5rem;
@@ -2818,3 +2865,14 @@ textarea {
     height: 28rem;
   }
 }
+/* Refinements follow base layouts so narrow screens retain readable summaries. */
+.tour-summary{grid-template-columns:1fr}
+.tour-summary dl{grid-template-columns:repeat(4,minmax(0,1fr))}
+.kicker,.menu-trigger,.header-action,.text-link,.button{font-size:.8rem}
+.wordmark span{font-size:.65rem}
+.hotspot{min-width:44px;min-height:44px}
+.real-wedding-grid details{margin-top:1rem}
+.real-wedding-grid summary{cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.season-context select{padding:.65rem;background:var(--cream);border:1px solid var(--willow)}
+.tour-confirmation{padding-top:5rem}
+@media(max-width:700px){.tour-summary dl{grid-template-columns:1fr 1fr}.site-header{gap:.6rem}.site-header .header-action{font-size:.7rem}.site-header .wordmark{font-size:1.35rem}.site-header .menu-trigger{font-size:.75rem}.date-search .qualification-fields{grid-template-columns:1fr}.lead-card dl{grid-template-columns:1fr}.lead-toolbar{flex-direction:column}}

@@ -1,0 +1,18 @@
+WILLOW LILY — SPRINT A RELIABILITY PACK
+Target branch: sprint-1-app-foundation ONLY
+
+Purpose:
+- Preserve current design and media library.
+- Strengthen route resilience and navigation safety.
+- Add polished 404 fallback.
+- Preserve all existing Vercel clean routes.
+- Add safe legacy aliases: /faq -> /planning, /tour -> /visit, /reviews -> /real-weddings.
+- Preserve security headers and add a restrictive browser permissions policy.
+- Carry forward the existing additive visual reliability layer (upgrade.css / upgrade.js) and current corrected core pages.
+
+IMPORTANT:
+This is an OVERLAY ZIP. Upload/replace these files on sprint-1-app-foundation. Do not delete media or other repository files that are not present in this ZIP.
+
+Verified route targets already present in the current branch include included.html, real-weddings.html, vendors.html, story.html, privacy.html, riverside.html and woods.html. Clean extensionless Vercel URLs are intentional.
+
+Sprint C will perform the larger Wedding Builder/date-state redesign; Sprint A does not fake that model change with cosmetic labels.

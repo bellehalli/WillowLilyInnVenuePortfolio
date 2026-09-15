@@ -1,4 +1,4 @@
-# Willow Lily Inn & Estate — Demo V1.1
+# Willow Lily Inn & Estate — Final Portfolio Demo V2.0
 
 Fictional venue sales demonstration for A. Halliwell Studio. Work belongs on `sprint-1-app-foundation`; do not merge to main without approval.
 
@@ -28,8 +28,14 @@ The public homepage can also check dates without the Builder. Sunday, One Day an
 
 The venue route is separated from public navigation but intentionally has no authentication. Do not store real customer data here. Sample business analytics are labeled and separate from local interaction counts.
 
-## Scope
+## Final portfolio scope
 
 The 51 original media assets are preserved byte-for-byte. Ceremony routes, comparison, package inclusions, weekend, Inn, searchable planning answers, filtered fictional wedding inspiration and vendor planning guides have dedicated pages. The estate plan is conceptual, not a survey. Seasonal exploration provides planning context; it is not a photographic reconstruction of every season.
 
 This archive is a portfolio demo, not a real booking platform. A production project still needs validated venue facts, licensed imagery, a single server-backed availability source, server-side revalidation, privacy/consent review, authentication, spam protection, transactional email and operational integrations. See `QA.md` for checks performed and remaining verification limits.
+
+## Production handoff boundaries
+
+`site-config.js` is the single launch-time boundary for verified venue identity and integration expectations. `seo.js` centralizes route metadata and marks `/venue-demo` as private/no-index. Because this repository has no approved production domain, `robots.txt` intentionally leaves the absolute sitemap URL as a launch task rather than publishing a false canonical host.
+
+The Venue Intelligence integration blueprint shows what replaces each local demonstration adapter after paid discovery: one authoritative availability source, a validated lead repository or CRM, consent-aware messaging, an owner-managed CMS, authenticated venue access and an approved analytics destination. Those systems are not impersonated in this portfolio archive.

@@ -2,33 +2,49 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    {"source":"/explore","destination":"/estate.html"},
-    {"source":"/explore/riverside","destination":"/riverside.html"},
-    {"source":"/explore/woods","destination":"/woods.html"},
-    {"source":"/explore/courtyard","destination":"/courtyard.html"},
-    {"source":"/explore/covered-bridge","destination":"/covered-bridge.html"},
-    {"source":"/weddings","destination":"/weddings.html"},
-    {"source":"/wedding-weekend","destination":"/weekend.html"},
-    {"source":"/inn","destination":"/inn.html"},
-    {"source":"/investment","destination":"/investment.html"},
-    {"source":"/whats-included","destination":"/included.html"},
-    {"source":"/real-weddings","destination":"/real-weddings.html"},
-    {"source":"/planning","destination":"/planning.html"},
-    {"source":"/vendors","destination":"/vendors.html"},
-    {"source":"/compare","destination":"/compare.html"},
-    {"source":"/story","destination":"/story.html"},
-    {"source":"/privacy","destination":"/privacy.html"},
-    {"source":"/build","destination":"/build.html"},
-    {"source":"/availability","destination":"/availability.html"},
-    {"source":"/visit","destination":"/visit.html"},
-    {"source":"/venue-demo","destination":"/venue-demo.html"},
-    {"source":"/faq","destination":"/planning.html"},
-    {"source":"/tour","destination":"/visit.html"},
-    {"source":"/reviews","destination":"/real-weddings.html"}
-  ],
-  "headers": [{"source":"/(.*)","headers":[
-    {"key":"X-Content-Type-Options","value":"nosniff"},
-    {"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},
-    {"key":"Permissions-Policy","value":"camera=(), microphone=(), geolocation=()"}
-  ]}]
+    {
+      "source": "/explore",
+      "destination": "/estate"
+    },
+    {
+      "source": "/explore/riverside",
+      "destination": "/riverside"
+    },
+    {
+      "source": "/explore/woods",
+      "destination": "/woods"
+    },
+    {
+      "source": "/explore/courtyard",
+      "destination": "/courtyard"
+    },
+    {
+      "source": "/explore/covered-bridge",
+      "destination": "/covered-bridge"
+    },
+    {
+      "source": "/wedding-weekend",
+      "destination": "/weekend"
+    },
+    {
+      "source": "/whats-included",
+      "destination": "/included"
+    },
+    {
+      "source": "/explore/barn",
+      "destination": "/barn"
+    },
+    {
+      "source": "/explore/gardens",
+      "destination": "/gardens"
+    },
+    {
+      "source": "/explore/waterfront",
+      "destination": "/waterfront"
+    },
+    {
+      "source": "/explore/after-dark",
+      "destination": "/after-dark"
+    }
+  ]
 }

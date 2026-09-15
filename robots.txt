@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /venue-demo
+
+# Add an absolute Sitemap URL after the production domain is assigned.

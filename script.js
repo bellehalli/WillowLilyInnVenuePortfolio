@@ -19,6 +19,7 @@ const persistSession=()=>write(sessionStore,SESSION,session);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dateText=(d,options={month:'long',day:'numeric',year:'numeric'})=>M.parse(d)?new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(M.parse(d)):'Date to be chosen';
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
+const icon=name=>window.WillowIcons?.render(name)||'';
 const slug=name=>({'Covered Bridge':'covered-bridge',Woods:'woods',Courtyard:'courtyard',Riverside:'riverside'}[name]||'riverside');
 const put=(selector,text)=>$$(selector).forEach(e=>e.textContent=text);
 const notice=document.createElement('p');notice.className='status-toast';notice.setAttribute('role','status');notice.hidden=true;document.body.append(notice);
@@ -55,6 +56,26 @@ $('[data-footer]')?.insertAdjacentHTML('beforeend',FOOTER);
 $$('.hotspot').forEach(a=>a.setAttribute('aria-label',a.textContent.trim().replace(/\s+/g,' ')));
 if(page==='riverside')$('[data-save-ceremony]')?.insertAdjacentHTML('afterend','<a class="text-link" href="/compare">Compare ceremonies →</a>');
 $('[data-persistent-ui]')?.insertAdjacentHTML('beforeend','<a class="mobile-date-cta" href="/availability">Check your date</a><div class="wedding-drawer" data-wedding-drawer hidden><div><span>Your wedding</span><strong data-drawer-ceremony></strong></div><a href="/build">Continue building</a></div>');
+function addIcon(target,name,where='afterbegin'){
+ const element=typeof target==='string'?$(target):target;
+ if(element&&!element.querySelector('.wl-icon')){
+  const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);let node;
+  while(node=walker.nextNode())node.nodeValue=node.nodeValue.replace(/\s*[↗→↓]\s*$/,'');
+  $$('span',element).filter(span=>!span.textContent.trim()).forEach(span=>span.remove());
+  element.insertAdjacentHTML(where,icon(name));
+ }
+}
+addIcon('[data-menu-open]','menu');addIcon('[data-menu-close]','close');
+addIcon('.header-action','calendar');addIcon('.mobile-date-cta','calendar');
+$$('.estate-facts li').forEach((fact,index)=>addIcon(fact,['people','leaf','key','pin'][index]));
+addIcon('[data-quick-check] button','calendar');
+$$('[data-path-icon]').forEach(slot=>slot.innerHTML=icon(slot.dataset.pathIcon));
+$$('.button,.text-link').forEach(control=>{
+ const text=control.textContent.toLowerCase();
+ const name=text.includes('date')||text.includes('weekend')?'calendar':text.includes('save')?'heart':text.includes('share')?'share':text.includes('edit')?'edit':text.includes('compare')?'compare':text.includes('direction')?'pin':text.includes('included')?'check':'arrow';
+ addIcon(control,name,text.includes('back')?'afterbegin':'beforeend');
+});
+$$('.location-facts dt').forEach((term,index)=>addIcon(term,['people','water','house','leaf','clock'][index%5]));
 function modal(element,open,trigger){
  if(!element)return;
  element.hidden=!open; document.body.classList.toggle('no-scroll',open);
@@ -106,18 +127,21 @@ function drawer(){
  const d=$('[data-wedding-drawer]');if(!d)return;
  d.hidden=!state.wedding.ceremony||['build','availability','visit','venue-demo'].includes(page);
  put('[data-drawer-ceremony]',state.wedding.ceremony||'');
+ if(d&&!d.hidden){const a=$('a',d);a.href=state.journey.builderCompleted?'/build#summary':'/build';a.textContent=state.journey.builderCompleted?'View your wedding':'Continue building';}
 }
 drawer();
 const ceremony=document.documentElement.dataset.ceremony||(page==='riverside'?'Riverside':null);
+const estateLocation=document.documentElement.dataset.location;
+if(estateLocation){if(!state.journey.locationsViewed.includes(estateLocation))state.journey.locationsViewed.push(estateLocation);analytics.track('estate_location_viewed',{location:estateLocation});}
 if(ceremony){if(!state.journey.locationsViewed.includes(ceremony))state.journey.locationsViewed.push(ceremony);analytics.track('estate_location_viewed',{location:ceremony});}
 $$('[data-save-ceremony]').forEach(button=>{
- const name=button.dataset.saveCeremony;const refresh=()=>{const saved=state.wedding.ceremony===name;button.setAttribute('aria-pressed',String(saved));button.textContent=saved?name+' is yours.':'Save '+name;};
- refresh();button.onclick=()=>{setWedding({ceremony:name});analytics.track('ceremony_saved',{ceremony:name});$$('[data-save-ceremony]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.saveCeremony===name));b.textContent=b.dataset.saveCeremony===name?name+' is yours.':'Save '+b.dataset.saveCeremony;});drawer();announce(name+' is yours. Continue building whenever you are ready.');};
+ const name=button.dataset.saveCeremony;const label=b=>{const saved=state.wedding.ceremony===b.dataset.saveCeremony;b.setAttribute('aria-pressed',String(saved));b.innerHTML=icon(saved?'check':'heart')+'<span>'+(saved?b.dataset.saveCeremony+' is yours.':'Save '+b.dataset.saveCeremony)+'</span>';};
+ label(button);button.onclick=()=>{setWedding({ceremony:name});analytics.track('ceremony_saved',{ceremony:name});$$('[data-save-ceremony]').forEach(label);drawer();announce(name+' is yours. Continue building whenever you are ready.');};
 });
 const quick=$('[data-quick-check]');
 if(quick){quick.elements.date.min=M.today();quick.onsubmit=e=>{e.preventDefault();const f=new FormData(quick);setWedding({guestCount:Number(f.get('guests')),package:f.get('package'),originalDate:f.get('date'),selectedDate:f.get('date'),season:M.seasonOf(f.get('date')),dateMode:'exact'});session.quickSearch=true;persistSession();location.href='/availability';};}
 const packageParam=new URL(location.href).searchParams.get('package');
-if(page==='build'&&Object.hasOwn(M.packages,packageParam))setWedding({package:packageParam});
+if(['build','availability'].includes(page)&&Object.hasOwn(M.packages,packageParam))setWedding({package:packageParam});
 function sharePayload(w){return {ceremony:w.ceremony,guestCount:w.guestCount,package:w.package,eveningPreferences:w.eveningPreferences,season:w.season,originalDate:w.originalDate,selectedDate:w.selectedDate,dateMode:w.dateMode};}
 let shared=false;
 if(page==='build'&&location.hash.startsWith('#wedding=')){
@@ -156,6 +180,7 @@ if(builder){
   $('.summary-image img').alt=w.season==='Autumn'?'Autumn ceremony inspiration':'Waterfront ceremony inspiration';
   const h=$('[data-summary-date]');h.tabIndex=-1;h.focus();s.scrollIntoView({block:'start'});
   analytics.track('wedding_summary_viewed');
+  $('[data-check-weekend]').href='/availability?check=1';
  }
  if(!shared){state.journey.builderStarted=true;analytics.track('builder_started');}
  builder.onsubmit=e=>e.preventDefault();
@@ -239,7 +264,8 @@ if(search){
  search.addEventListener('change',e=>{if(['guests','package','ceremony'].includes(e.target.name)){sync();available.hidden=true;alts.hidden=true;result.hidden=false;result.innerHTML='<h2>Check your updated wedding.</h2><p>Choose a date or search by season.</p>';}});
  $('[data-flexible]').onsubmit=e=>{e.preventDefault();sync();const season=new FormData(e.currentTarget).get('season');setWedding({dateMode:'flexible',season,originalDate:null,selectedDate:null});state.journey.availabilitySearched=true;analytics.track('availability_searched',{season,flexible:true});result.hidden=true;available.hidden=true;alternatives(null,season);};
  $('[data-more-dates]').onclick=()=>{available.hidden=true;alternatives(state.availability.originalDate||state.wedding.selectedDate);};
- if(session.quickSearch&&search.elements.date.value){session.quickSearch=false;persistSession();run(search.elements.date.value);}
+ if((session.quickSearch||new URL(location.href).searchParams.get('check')==='1')&&search.elements.date.value){session.quickSearch=false;persistSession();if(state.availability.acceptedAlternative===state.wedding.selectedDate&&state.availability.finalDate===state.wedding.selectedDate)select(state.wedding.selectedDate);else run(search.elements.date.value);}
+ else if(state.availability.finalDate===state.wedding.selectedDate&&state.wedding.selectedDate)select(state.wedding.selectedDate);
  else if(state.wedding.dateMode==='flexible'){result.hidden=true;alternatives(null,state.wedding.season);}
  else put('[data-requested-date]',dateText(search.elements.date.value));
 }

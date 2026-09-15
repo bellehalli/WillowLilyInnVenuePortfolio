@@ -9,8 +9,8 @@
       name="description"
       content="A demonstration of qualified venue leads, customer journeys and date-recovery analytics for A. Halliwell Studio."
     />
-    <link rel="stylesheet" href="/styles.css" />
-  <link rel="stylesheet" href="/upgrade.css"></head>
+    <script src="/site-config.js"></script><script src="/seo.js"></script><link rel="stylesheet" href="/styles.css" />
+  </head>
   <body class="dashboard-body">
     <a class="skip-link" href="#dashboard-main">Skip to dashboard</a>
     <header class="dashboard-header">
@@ -22,7 +22,7 @@
     <main id="dashboard-main" class="dashboard-main">
       <section class="dashboard-welcome">
         <div>
-          <p class="kicker">Tuesday, September 15</p>
+          <p class="kicker" data-dashboard-date>Demonstration workspace</p>
           <h1>Good morning.</h1>
           <p>One qualified tour request is ready for review.</p>
         </div>
@@ -233,7 +233,29 @@
           </article>
         </div>
       </section>
+      <section class="integration-blueprint" aria-labelledby="integration-title">
+        <div class="integration-intro">
+          <div>
+            <p class="kicker">Production integration blueprint</p>
+            <h2 id="integration-title">A polished demonstration.<br />Clear paths to operation.</h2>
+          </div>
+          <p>
+            This portfolio build deliberately uses local demonstration data. A client launch connects
+            the same customer experience to the venue’s approved systems after discovery—without
+            creating competing calendars or exposing owner controls.
+          </p>
+        </div>
+        <div class="integration-grid">
+          <article><span>01</span><h3>Availability</h3><p>One server-backed source of truth with revalidation before meaningful actions.</p><small>Demo now · deterministic 2027 inventory</small></article>
+          <article><span>02</span><h3>Qualified leads</h3><p>Validated tour requests mapped into the venue’s chosen CRM or lead repository.</p><small>Demo now · private browser session</small></article>
+          <article><span>03</span><h3>Communication</h3><p>Consent-aware confirmations, venue notifications and follow-up workflows.</p><small>Demo now · no messages are sent</small></article>
+          <article><span>04</span><h3>Content</h3><p>A controlled CMS for verified policies, pricing, vendors, weddings and seasonal media.</p><small>Demo now · versioned static content</small></article>
+          <article><span>05</span><h3>Venue access</h3><p>Authentication, permissions, audit history and secure customer-data handling.</p><small>Demo now · separated unlisted route</small></article>
+          <article><span>06</span><h3>Measurement</h3><p>Provider-independent events connected to the approved analytics destination.</p><small>Demo now · local named event stream</small></article>
+        </div>
+        <p class="integration-note"><strong>Demonstration boundary:</strong> no live calendar, CRM, payment, email, authentication or real customer information is connected.</p>
+      </section>
     </main>
-    <script src="/demo-model.js"></script><script src="/script.js"></script>
-  <script src="/upgrade.js"></script></body>
+    <script src="/icons.js"></script><script src="/demo-model.js"></script><script src="/script.js"></script>
+  </body>
 </html>

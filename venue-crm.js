@@ -184,10 +184,10 @@ function renderKPIs(){
   const metricCards=$$('.metric-row article');
   if(metricCards[0]){metricCards[0].querySelector('strong').textContent=String(ls.length);metricCards[0].querySelector('small').textContent='Active CRM leads';}
   if(metricCards[1]){metricCards[1].querySelector('strong').textContent=String(ops.filter(x=>x.type==='tour').length);metricCards[1].querySelector('small').textContent='Upcoming private tours';}
-  const pipeline=$('.pipeline-total');
-  if(pipeline){
-    pipeline.querySelector('strong').textContent=money(ls.reduce((s,l)=>s+(Number(l.value)||0),0));
-    pipeline.querySelector('small').textContent=`${ls.length} active qualified leads · demonstration data`;
+  const pipelineEl=$('.pipeline-total');
+  if(pipelineEl){
+    pipelineEl.querySelector('strong').textContent=money(ls.reduce((s,l)=>s+(Number(l.value)||0),0));
+    pipelineEl.querySelector('small').textContent=`${ls.length} active qualified leads · demonstration data`;
   }
 }
 

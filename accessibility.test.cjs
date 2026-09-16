@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const root=path.resolve(__dirname,'..');
+const root=__dirname;
 const pages=fs.readdirSync(root).filter(file=>file.endsWith('.html')).map(file=>[file,fs.readFileSync(path.join(root,file),'utf8')]);
 
 test('every page has the essential document and keyboard landmarks',()=>{

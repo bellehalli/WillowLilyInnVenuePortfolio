@@ -7,7 +7,7 @@ const storageFor=name=>{try{return window[name];}catch{return null;}};
 const localStore=storageFor('localStorage'),sessionStore=storageFor('sessionStorage');
 const read=(storage,key,fallback)=>{try{return JSON.parse(storage.getItem(key))||fallback;}catch{return fallback;}};
 const write=(storage,key,value)=>{try{storage.setItem(key,JSON.stringify(value));return true;}catch{return false;}};
-const fresh=()=>({version:2,entryViewed:false,wedding:M.normalize({eveningPreferences:[]}),availability:{originalStatus:null,originalDate:null,alternatives:[],acceptedAlternative:null,finalDate:null},journey:{source:'Direct / unknown',locationsViewed:[],pagesViewed:[],builderStarted:false,builderCompleted:false,availabilitySearched:false,tourRequested:false},events:[]});
+const fresh=()=>({version:2,entryViewed:false,wedding:M.normalize({eveningPreferences:[]}),availability:{originalStatus:null,originalDate:null,alternatives:[],acceptedAlternative:null,finalDate:null},journey:{source:'Direct / unknown',locationsViewed:[],pagesViewed:[],builderStarted:false,builderCompleted:false,qualificationsCaptured:false,availabilitySearched:false,tourRequested:false},events:[]});
 let state=read(localStore,KEY,fresh());
 state={...fresh(),...state,wedding:M.normalize(state.wedding),availability:{...fresh().availability,...state.availability},journey:{...fresh().journey,...state.journey}};
 state.events=Array.isArray(state.events)?state.events.slice(-200):[];
@@ -49,8 +49,8 @@ if(!state.journey.pagesViewed.length){
  if(!source&&document.referrer){try{const host=new URL(document.referrer).hostname;source=/google\./.test(host)?'Google':/instagram\./.test(host)?'Instagram':/facebook\./.test(host)?'Facebook':host!==location.hostname?'External referral':null;}catch{}}
  state.journey.source=source||'Direct / unknown';
 }
-const HEADER='<header class="site-header" data-header><button class="menu-trigger" type="button" data-menu-open aria-label="Open navigation" aria-expanded="false">Menu</button><a class="wordmark" href="/" aria-label="Willow Lily home">Willow Lily<span>Inn &amp; Estate</span></a><a class="header-action" href="/availability">Check your date</a></header><div class="menu-panel" data-menu hidden role="dialog" aria-modal="true" aria-label="Estate navigation"><button class="menu-close" type="button" data-menu-close>Close</button><nav aria-label="Primary navigation"><a href="/explore"><span>01</span>Explore the Estate</a><a href="/weddings"><span>02</span>Weddings</a><a href="/wedding-weekend"><span>03</span>The Weekend</a><a href="/inn"><span>04</span>The Inn</a><a href="/investment"><span>05</span>Investment</a><a href="/visit"><span>06</span>Plan Your Visit</a><a href="/planning"><span>07</span>Planning</a></nav><p>Eight acres · Four ceremony settings · Private Inn · Maximum 160 people, including vendors</p></div>';
-const FOOTER='<footer class="site-footer"><div><p class="footer-mark">WL</p><h2>Willow Lily</h2><p>Inn &amp; Estate · Fenton, Michigan</p></div><nav aria-label="Footer navigation"><a href="/explore">The Estate</a><a href="/investment">Investment</a><a href="/availability">Availability</a><a href="/visit">Private Tours</a><a href="/planning">Planning &amp; FAQ</a><a href="/vendors">Vendor guide</a><a href="/real-weddings">Wedding inspiration</a><a href="/story">Our story</a></nav><p class="demo-credit">Fictional venue demonstration by A. Halliwell Studio. No live bookings. <a href="/privacy">Demo privacy</a></p></footer>';
+const HEADER='<header class="site-header" data-header><button class="menu-trigger" type="button" data-menu-open aria-label="Open navigation" aria-expanded="false">Menu</button><a class="wordmark" href="/" aria-label="Willow Lily home">Willow Lily<span>Inn &amp; Estate</span></a><nav class="desktop-nav" aria-label="Primary navigation"><a href="/explore">Estate</a><a href="/weddings">Weddings</a><a href="/wedding-weekend">Weekend</a><a href="/inn">Inn</a><a href="/investment">Investment</a><a href="/planning">Planning</a><a href="/visit">Visit</a></nav><a class="header-action" href="/availability">Check your date</a></header><div class="menu-panel" data-menu hidden role="dialog" aria-modal="true" aria-label="Estate navigation"><button class="menu-close" type="button" data-menu-close>Close</button><nav aria-label="Primary navigation"><a href="/explore"><span>01</span>Explore the Estate</a><a href="/weddings"><span>02</span>Weddings</a><a href="/wedding-weekend"><span>03</span>The Weekend</a><a href="/inn"><span>04</span>The Inn</a><a href="/investment"><span>05</span>Investment</a><a href="/whats-included"><span>06</span>What’s Included</a><a href="/planning"><span>07</span>Planning &amp; Policies</a><a href="/visit"><span>08</span>Plan Your Visit</a></nav><p>Eight acres · Four ceremony settings · Private Inn · Maximum 160 people, including vendors</p></div>';
+const FOOTER='<footer class="site-footer"><div><p class="footer-mark">WL</p><h2>Willow Lily</h2><p>Inn &amp; Estate · Fenton, Michigan</p><div class="footer-contact"><a href="/visit">Request a private tour</a><a href="/planning">Ask a planning question</a><span>Demo phone · (810) 555-0142</span><span>Demo email · hello@willowlily.example</span></div></div><nav aria-label="Footer navigation"><a href="/explore">The Estate</a><a href="/wedding-weekend">The Weekend</a><a href="/inn">The Inn</a><a href="/investment">Investment</a><a href="/whats-included">What’s Included</a><a href="/availability">Availability</a><a href="/visit">Private Tours</a><a href="/planning">Planning &amp; Policies</a><a href="/vendors">Vendor guide</a><a href="/real-weddings">Wedding inspiration</a><a href="/story">Our story</a></nav><p class="demo-credit">Fictional venue demonstration by A. Halliwell Studio. The displayed phone and email are non-working placeholders; no live bookings or messages are sent. <a href="/privacy">Demo privacy</a></p></footer>';
 $('[data-shell]')?.insertAdjacentHTML('beforeend',HEADER);
 $('[data-footer]')?.insertAdjacentHTML('beforeend',FOOTER);
 $$('.hotspot').forEach(a=>a.setAttribute('aria-label',a.textContent.trim().replace(/\s+/g,' ')));
@@ -139,7 +139,7 @@ $$('[data-save-ceremony]').forEach(button=>{
  label(button);button.onclick=()=>{setWedding({ceremony:name});analytics.track('ceremony_saved',{ceremony:name});$$('[data-save-ceremony]').forEach(label);drawer();announce(name+' is yours. Continue building whenever you are ready.');};
 });
 const quick=$('[data-quick-check]');
-if(quick){quick.elements.date.min=M.today();quick.onsubmit=e=>{e.preventDefault();const f=new FormData(quick);setWedding({guestCount:Number(f.get('guests')),package:f.get('package'),originalDate:f.get('date'),selectedDate:f.get('date'),season:M.seasonOf(f.get('date')),dateMode:'exact'});session.quickSearch=true;persistSession();location.href='/availability';};}
+if(quick){quick.elements.date.min=M.today();quick.onsubmit=e=>{e.preventDefault();const f=new FormData(quick);setWedding({guestCount:Number(f.get('guests')),package:f.get('package'),originalDate:f.get('date'),selectedDate:f.get('date'),season:M.seasonOf(f.get('date')),dateMode:'exact'});state.journey.qualificationsCaptured=true;persist();session.quickSearch=true;persistSession();location.href='/availability';};}
 const packageParam=new URL(location.href).searchParams.get('package');
 if(['build','availability'].includes(page)&&Object.hasOwn(M.packages,packageParam))setWedding({package:packageParam});
 function sharePayload(w){return {ceremony:w.ceremony,guestCount:w.guestCount,package:w.package,eveningPreferences:w.eveningPreferences,season:w.season,originalDate:w.originalDate,selectedDate:w.selectedDate,dateMode:w.dateMode};}
@@ -151,7 +151,7 @@ if(page==='build'&&location.hash.startsWith('#wedding=')){
 const builder=$('[data-builder]');
 if(builder){
  let step=1;
- const panels=$$('[data-builder-step]'),next=$('[data-builder-next]'),back=$('[data-builder-back]');
+ const panels=$$('[data-builder-step]'),next=$('[data-builder-next]'),back=$('[data-builder-back]'),workspace=$('[data-builder-workspace]'),carried=$('[data-builder-carried]');
  const count=builder.querySelector('[name=guests][value="'+state.wedding.guestCount+'"]');if(count)count.checked=true;
  for(const name of ['ceremony','package','season','dateMode']){
   const v=state.wedding[name]||(name==='ceremony'?'Riverside':null);const input=$$('[name="'+name+'"]',builder).find(i=>i.value===v);if(input)input.checked=true;
@@ -165,15 +165,22 @@ if(builder){
  function capture(){
   const f=new FormData(builder);const date=f.get('weddingDate')||null;
   setWedding({guestCount:Number(f.get('guests')),ceremony:f.get('ceremony'),package:f.get('package'),eveningPreferences:f.getAll('evening'),season:f.get('season'),dateMode:f.get('dateMode'),originalDate:f.get('dateMode')==='flexible'?null:date,selectedDate:f.get('dateMode')==='flexible'?null:date});
+  updateLiveSummary();
  }
  builder.addEventListener('change',e=>{capture();inn();dateMode();const events={guests:'guest_count_selected',ceremony:'ceremony_saved',package:'package_selected',season:'season_selected'};if(events[e.target.name])analytics.track(events[e.target.name],{value:e.target.value});});
- function showStep(n){
+ function showStep(n,focus=true){
   step=n;panels.forEach(p=>p.classList.toggle('active',Number(p.dataset.builderStep)===n));
   put('[data-step-number]',n);$('[data-progress-bar]').style.width=n/7*100+'%';back.disabled=n===1;next.textContent=n===7?'Reveal my wedding':'Continue';
-  const heading=panels[n-1].querySelector('legend');heading.tabIndex=-1;heading.focus();heading.scrollIntoView({block:'center',behavior:motion.matches?'instant':'smooth'});
+  if(focus){const heading=panels[n-1].querySelector('legend');heading.tabIndex=-1;heading.focus();heading.scrollIntoView({block:'center',behavior:motion.matches?'instant':'smooth'});}
+ }
+ function updateLiveSummary(){
+  const w=state.wedding;
+  put('[data-live-guests]',w.guestRange);put('[data-live-ceremony]',w.ceremony||'Still exploring');put('[data-live-package]',w.package);put('[data-live-price]',money(w.investment));
+  put('[data-live-evening]',w.eveningPreferences.length?w.eveningPreferences.join(' + '):'Still choosing');put('[data-live-date]',w.selectedDate?dateText(w.selectedDate):(w.dateMode==='flexible'?w.season+' · flexible':'Still choosing'));
+  if(carried){carried.hidden=!(state.journey.qualificationsCaptured&&!shared);put('[data-carried-guests]',w.guestRange);put('[data-carried-package]',w.package+' · '+money(w.investment));put('[data-carried-date]',dateText(w.selectedDate));}
  }
  function renderSummary(){
-  const w=state.wedding;builder.hidden=true;$('.builder-intro').hidden=true;const s=$('[data-summary]');s.hidden=false;
+  const w=state.wedding;workspace.hidden=true;$('.builder-intro').hidden=true;if(carried)carried.hidden=true;const s=$('[data-summary]');s.hidden=false;
   put('[data-summary-date]',w.dateMode==='flexible'&&!w.selectedDate?w.season+' · flexible dates':dateText(w.selectedDate));put('[data-summary-ceremony]',w.ceremony||'Ceremony to be chosen');
   $('.summary-content dl').outerHTML=details(w);put('[data-summary-price]',money(w.investment));
   $('.summary-image img').src=w.season==='Autumn'?'/ceremony-autumn-exit.AVIF':'/estate-waterfront-01.AVIF';
@@ -186,7 +193,7 @@ if(builder){
  builder.onsubmit=e=>e.preventDefault();
  next.onclick=()=>{
   capture();
-  if(step<7){showStep(step+1);return;}
+  if(step<7){showStep(state.journey.qualificationsCaptured&&step===2?4:step+1);return;}
   if(state.wedding.dateMode==='exact'&&!builder.elements.weddingDate.reportValidity())return;
   if(state.wedding.dateMode==='exact'){
    const r=M.check(state.wedding.originalDate,state.wedding.package);
@@ -195,8 +202,9 @@ if(builder){
   }
   state.journey.builderCompleted=true;persist();analytics.track('builder_completed',{package:state.wedding.package,investment:state.wedding.investment});renderSummary();
  };
- back.onclick=()=>showStep(step-1);
- $('[data-edit-wedding]').onclick=()=>{$('[data-summary]').hidden=true;builder.hidden=false;$('.builder-intro').hidden=false;showStep(1);};
+ back.onclick=()=>showStep(state.journey.qualificationsCaptured&&step===4?2:step-1);
+ $$('[data-builder-jump]').forEach(button=>button.onclick=()=>{const target=Number(button.dataset.builderJump);$('[data-summary]').hidden=true;workspace.hidden=false;builder.hidden=false;$('.builder-intro').hidden=false;updateLiveSummary();showStep(target);});
+ $('[data-edit-wedding]').onclick=()=>{$('[data-summary]').hidden=true;workspace.hidden=false;builder.hidden=false;$('.builder-intro').hidden=false;updateLiveSummary();showStep(1);};
  $('[data-share-wedding]').onclick=async()=>{
   const url=location.origin+'/build#wedding='+encodeURIComponent(JSON.stringify(sharePayload(state.wedding)));
   try{if(navigator.share)await navigator.share({title:'Our Willow Lily wedding',url});else{await navigator.clipboard.writeText(url);announce('Personalized wedding link copied. Contact information is not included.');}}
@@ -204,7 +212,9 @@ if(builder){
  };
  $('[data-share-wedding]').insertAdjacentHTML('beforebegin','<button type="button" class="text-link light-link" data-save-wedding>Save my wedding</button>');
  $('[data-save-wedding]').onclick=()=>announce(persist()?'Your wedding is saved on this device. Use Share to open it on another device.':'Storage is unavailable. Use Share to keep your wedding.');
+ updateLiveSummary();
  if(shared||location.hash==='#summary'&&state.journey.builderCompleted)renderSummary();
+ else if(state.journey.qualificationsCaptured)showStep(2,false);
 }
 function qualificationFields(w,includeDate=false){
  return '<div class="form-fields qualification-fields">'+
@@ -272,14 +282,14 @@ if(search){
 const tourForm=$('[data-tour-form]');
 if(tourForm){
  const summary=$('.tour-summary');
- function updateTourSummary(){summary.innerHTML='<p class="kicker">Your wedding preferences</p><h2>'+dateText(state.wedding.selectedDate)+'</h2>'+details(state.wedding);}
+ function updateTourSummary(){const w=state.wedding;summary.innerHTML='<div class="tour-summary-head"><div><p class="kicker">Your wedding preferences</p><h2>'+dateText(w.selectedDate)+'</h2></div><a class="text-link" href="/build#summary">Edit wedding</a></div>'+details(w)+'<p class="tour-date-context"><strong>Your wedding weekend:</strong> '+dateText(w.selectedDate)+'. <strong>Your private tour:</strong> choose an upcoming Saturday below—well before the celebration.</p>';}
  updateTourSummary();
  if(!state.journey.builderCompleted&&!state.availability.finalDate){
   $('.tour-intro>p:last-child').textContent='Tell us the essentials, then choose a private Saturday hour. No Wedding Builder required.';
   tourForm.insertAdjacentHTML('afterbegin','<fieldset><legend>Start with your wedding</legend>'+qualificationFields(state.wedding,true)+'</fieldset>');
   tourForm.addEventListener('change',e=>{if(['guests','package','ceremony','weddingDate'].includes(e.target.name)){setWedding({guestCount:Number(tourForm.elements.guests.value),package:tourForm.elements.package.value,ceremony:tourForm.elements.ceremony.value||null,originalDate:tourForm.elements.weddingDate.value,selectedDate:tourForm.elements.weddingDate.value,season:M.seasonOf(tourForm.elements.weddingDate.value)});updateTourSummary();}});
  }
- const days=M.tourDates();$('.tour-date').innerHTML='<label><span>Private tour date · Michigan time</span><select name="tourDate">'+days.map(d=>'<option value="'+d+'">'+dateText(d,{weekday:'long',month:'long',day:'numeric',year:'numeric'})+'</option>').join('')+'</select></label><small>Each private tour lasts one hour. Demo request only.</small>';
+ const days=M.tourDates();$('.tour-date').innerHTML='<span class="tour-date-label">Private tour date · Michigan time</span><div class="tour-date-grid">'+days.slice(0,6).map((d,i)=>'<label><input type="radio" name="tourDate" value="'+d+'" '+(i===0?'checked':'')+' required><span><small>Saturday</small><strong>'+dateText(d,{month:'short',day:'numeric',year:'numeric'})+'</strong></span></label>').join('')+'</div><small>Choose from upcoming Saturdays before your wedding. Each private tour lasts one hour. Demo request only.</small>';
  for(const name of ['firstName','partnerName','email','phone']){tourForm.elements[name].value='';tourForm.elements[name].maxLength=name==='email'?254:100;}
  tourForm.elements.message.maxLength=2000;
  put('.demo-disclaimer','Demonstration only. Use fictional contact details. Contact information stays in this browser tab’s session and is never sent to a venue.');

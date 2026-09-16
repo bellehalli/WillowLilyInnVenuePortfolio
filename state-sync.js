@@ -6,7 +6,10 @@ const w=()=>read().wedding||{};
 const dateText=d=>{if(!d)return'Date to be chosen';const x=new Date(d+'T12:00:00Z');return Number.isNaN(x.getTime())?'Date to be chosen':new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'UTC'}).format(x);};
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(n)||0);
 const setText=(sel,val)=>document.querySelectorAll(sel).forEach(el=>el.textContent=val);
-const selectedDate=()=>w().selectedDate||w().originalDate||'';
+const selectedDate=()=>{
+ const state=read(), wedding=state.wedding||{}, availability=state.availability||{};
+ return availability.finalDate||availability.acceptedAlternative||wedding.selectedDate||wedding.originalDate||'';
+};
 function hydrate(){
  const wedding=w();
  const date=selectedDate();

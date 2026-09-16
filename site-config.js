@@ -32,25 +32,19 @@
     })
   });
 
-  function addCss(href, key) {
-    if (document.querySelector(`link[data-${key}]`)) return;
+  if (!document.querySelector('link[data-consent-css]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = href;
-    link.dataset[key] = '';
+    link.href = '/consent-manager.css';
+    link.dataset.consentCss = '';
     document.head.appendChild(link);
   }
 
-  function addScript(src, key) {
-    if (document.querySelector(`script[data-${key}]`)) return;
+  if (!document.querySelector('script[data-consent-script]')) {
     const script = document.createElement('script');
-    script.src = src;
+    script.src = '/consent-manager.js';
     script.defer = true;
-    script.dataset[key] = '';
+    script.dataset.consentScript = '';
     document.head.appendChild(script);
   }
-
-  addCss('/consent-manager.css', 'consentCss');
-  addScript('/consent-manager.js', 'consentScript');
-  addScript('/consent-enforcement.js', 'consentEnforcement');
 })(window);

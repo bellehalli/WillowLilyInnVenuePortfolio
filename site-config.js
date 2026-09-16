@@ -4,6 +4,7 @@
  */
 (function (root) {
   'use strict';
+
   root.WillowSite = Object.freeze({
     mode: 'demonstration',
     name: 'Willow Lily Inn & Estate',
@@ -30,4 +31,25 @@
       security: 'Protect venue intelligence with authentication, roles and audit logging.'
     })
   });
+
+  /*
+   * Site-wide privacy/consent bootstrap.
+   * site-config.js is already loaded by every Willow Lily page, so this makes
+   * the consent manager global without editing every HTML file.
+   */
+  if (!document.querySelector('link[data-consent-css]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/consent-manager.css';
+    link.dataset.consentCss = '';
+    document.head.appendChild(link);
+  }
+
+  if (!document.querySelector('script[data-consent-script]')) {
+    const script = document.createElement('script');
+    script.src = '/consent-manager.js';
+    script.defer = true;
+    script.dataset.consentScript = '';
+    document.head.appendChild(script);
+  }
 })(window);

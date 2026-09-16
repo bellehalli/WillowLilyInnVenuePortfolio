@@ -1,0 +1,39 @@
+WILLOW LILY — V4 DATE CONTINUITY FIX
+
+REPLACE ONLY:
+live-sales-demo.js
+
+Target branch:
+sprint-1-app-foundation
+
+WHY THIS EXISTS
+The couple/deposit pages could still display "Date to be chosen" because the
+live sales layer only trusted the localStorage wedding record. The tour lead
+already contains a wedding snapshot, but the sales layer did not use it as a
+fallback.
+
+V4 FIX
+The wedding date now resolves from, in order:
+1. availability.finalDate
+2. availability.acceptedAlternative
+3. wedding.selectedDate
+4. wedding.originalDate
+5. saved session availability snapshot
+6. saved live-tour wedding snapshot
+7. most recent venue-dashboard lead snapshot
+
+The wedding snapshot is also explicitly saved:
+- when the tour request succeeds
+- when proposal loads
+- before Stripe checkout
+- when Stripe returns to deposit success
+
+EXPECTED RESULT
+If Sarah + James accepted October 23, 2027, the same date should appear on:
+- Tour confirmation
+- Proposal
+- Deposit success
+- Couple planning view
+- Venue Intelligence dashboard
+
+This is a continuity patch only. It does not redesign any page.

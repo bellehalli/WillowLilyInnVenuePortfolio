@@ -29,16 +29,63 @@ const fmt=d=>{
 const today=()=>{const d=new Date();d.setHours(12,0,0,0);return d};
 
 function wedding(){
-  const s=state(),w=s.wedding||{},a=s.availability||{};
+  const s=state(),w=s.wedding||{},a=s.availability||{},d=demo();
+
+  /* Durable fallback chain:
+     1. canonical local wedding/availability state
+     2. explicit session wedding snapshot
+     3. live tour lead's wedding snapshot
+     4. most recent dashboard-compatible lead snapshot
+
+     This prevents the post-Stripe / couple-view "Date to be chosen" regression
+     even if the local wedding record is incomplete or the user entered the
+     sales flow from a different route. */
+  const latestLead=Array.isArray(d.leads)&&d.leads.length?d.leads[d.leads.length-1]:null;
+  const snap=d.weddingSnapshot||d.lead?.wedding||latestLead?.wedding||{};
+  const snapAvailability=d.availabilitySnapshot||latestLead?.availability||{};
+
+  const date=
+    a.finalDate||
+    a.acceptedAlternative||
+    w.selectedDate||
+    w.originalDate||
+    snapAvailability.finalDate||
+    snapAvailability.acceptedAlternative||
+    snap.selectedDate||
+    snap.originalDate||
+    snap.date||
+    '';
+
+  const packageName=w.package||snap.package||'Full Weekend';
+
   return {
-    date:a.finalDate||a.acceptedAlternative||w.selectedDate||w.originalDate||'',
-    guestCount:w.guestCount||125,
-    ceremony:w.ceremony||'Riverside',
-    package:w.package||'Full Weekend',
-    investment:Number(w.investment)||14000,
-    eveningPreferences:Array.isArray(w.eveningPreferences)?w.eveningPreferences:[],
-    inn:(w.package&&window.WillowModel?.packages?.[w.package]?.inn)||''
+    date,
+    guestCount:w.guestCount||snap.guestCount||125,
+    ceremony:w.ceremony||snap.ceremony||'Riverside',
+    package:packageName,
+    investment:Number(w.investment||snap.investment)||14000,
+    eveningPreferences:Array.isArray(w.eveningPreferences)&&w.eveningPreferences.length
+      ? w.eveningPreferences
+      : (Array.isArray(snap.eveningPreferences)?snap.eveningPreferences:[]),
+    inn:(packageName&&window.WillowModel?.packages?.[packageName]?.inn)||snap.inn||''
   };
+}
+
+function saveWeddingSnapshot(weddingRecord){
+  const s=state();
+  const a=s.availability||{};
+  const existing=demo();
+  saveDemo({
+    weddingSnapshot:{
+      ...(existing.weddingSnapshot||{}),
+      ...(weddingRecord||{}),
+      selectedDate:(weddingRecord?.date||weddingRecord?.selectedDate||existing.weddingSnapshot?.selectedDate||'')
+    },
+    availabilitySnapshot:{
+      ...(existing.availabilitySnapshot||{}),
+      ...a
+    }
+  });
 }
 
 function nextTourDates(count=6){
@@ -161,6 +208,11 @@ function initTour(){
       saveDemo({
         lead,
         leads:leads.slice(-10),
+        weddingSnapshot:{
+          ...payload.wedding,
+          selectedDate:payload.wedding.date||''
+        },
+        availabilitySnapshot:{...(state().availability||{})},
         tour:{
           date:payload.tourDate,
           time:payload.tourTime,
@@ -209,6 +261,7 @@ function initProposal(){
   if(!page)return;
 
   const w=wedding(),d=demo(),lead=d.lead||{};
+  saveWeddingSnapshot(w);
   fillWeddingSummary();
 
   $('[data-proposal-names]').textContent=[lead.firstName||d.tour?.firstName||'Sarah',lead.partnerName||d.tour?.partnerName||'James'].filter(Boolean).join(' + ');
@@ -241,6 +294,7 @@ function initProposal(){
     btn.disabled=true;
     btn.textContent='Opening Stripe test checkout…';
     try{
+      saveWeddingSnapshot(w);
       const result=await post('/api/create-checkout',{
         amount:deposit,
         wedding:w,
@@ -260,8 +314,12 @@ function initProposal(){
 function initSuccess(){
   if(!document.documentElement.matches('[data-page="deposit-success"]'))return;
   const w=wedding();
+  saveWeddingSnapshot(w);
   fillWeddingSummary();
-  saveDemo({payment:{status:'Test deposit completed',completedAt:new Date().toISOString(),amount:Math.round(w.investment*.20)}});
+  saveDemo({
+    weddingSnapshot:{...w,selectedDate:w.date||''},
+    payment:{status:'Test deposit completed',completedAt:new Date().toISOString(),amount:Math.round(w.investment*.20)}
+  });
   $('[data-success-deposit]').textContent=money(Math.round(w.investment*.20));
   $('[data-success-balance]').textContent=money(w.investment-Math.round(w.investment*.20));
 }
@@ -269,6 +327,8 @@ function initSuccess(){
 function initCoupleDemo(){
   if(!document.documentElement.matches('[data-page="couple-demo"]'))return;
   const d=demo(),lead=d.lead||{};
+  const w=wedding();
+  if(w.date)saveWeddingSnapshot(w);
   fillWeddingSummary();
 
   $('[data-couple-names]').textContent=[lead.firstName||d.tour?.firstName||'Sarah',lead.partnerName||d.tour?.partnerName||'James'].filter(Boolean).join(' + ');

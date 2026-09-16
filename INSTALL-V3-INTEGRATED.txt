@@ -1,0 +1,42 @@
+WILLOW LILY — V3 INTEGRATED VENUE VIEW
+
+REPLACE ONLY:
+venue-demo.html
+
+Target branch:
+sprint-1-app-foundation
+
+WHY:
+You liked BOTH:
+1. the original "what the venue sees" lead + customer journey dashboard
+2. the newer live tour / proposal / Stripe workflow
+
+This file keeps them as ONE venue-facing product.
+
+WHAT STAYS:
+- Original Venue Intelligence design
+- Qualified lead card
+- Customer journey card
+- Sales funnel
+- Package demand
+- Ceremony demand
+- Date recovery
+- Lead sources
+- Date demand
+- Existing script.js behavior
+
+WHAT GETS LAYERED IN:
+- unified live tour session
+- proposal status
+- Stripe TEST deposit status
+- Resend-connected demo messaging copy
+- no duplicate lead card
+- no second dashboard
+
+LOAD ORDER:
+script.js
+-> venue-demo-live.js
+-> live-sales-demo.js
+
+Do not delete script.js.
+Do not upload this to main yet.

@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /venue-demo
+Disallow: /couple-demo
+Disallow: /proposal
+Disallow: /deposit-success
+Disallow: /api/
 
-# Add an absolute Sitemap URL after the production domain is assigned.
+Sitemap: https://www.willowlilyestate.com/sitemap.xml

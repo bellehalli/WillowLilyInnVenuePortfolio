@@ -61,3 +61,11 @@
 @media(prefers-reduced-motion:reduce){
  .external-proof-link{scroll-behavior:auto}
 }
+
+.demo-reviews{background:#f4f0e7}
+.demo-reviews-heading{max-width:55rem;margin-bottom:3rem}.demo-reviews-heading h2{font:500 clamp(3rem,5vw,5rem)/1 var(--serif);margin:.5rem 0 1.25rem}
+.demo-review-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #b7b1a5;border-left:1px solid #b7b1a5}
+.demo-review-grid blockquote{margin:0;padding:clamp(2rem,4vw,3.5rem);border-right:1px solid #b7b1a5;border-bottom:1px solid #b7b1a5;min-height:18rem;display:flex;flex-direction:column}
+.demo-review-grid blockquote p{font:500 clamp(1.45rem,2.3vw,2.1rem)/1.2 var(--serif);margin:0}.demo-review-grid footer{margin-top:auto;padding-top:2rem;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
+.carried-wedding-card{border:1px solid #b7b1a5;padding:1.5rem 1.75rem;margin-bottom:1.5rem}.carried-wedding-card p{margin:.25rem 0 .75rem}
+@media(max-width:800px){.demo-review-grid{grid-template-columns:1fr}.demo-review-grid blockquote{min-height:14rem}}

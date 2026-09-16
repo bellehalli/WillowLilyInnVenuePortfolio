@@ -32,24 +32,25 @@
     })
   });
 
-  /*
-   * Site-wide privacy/consent bootstrap.
-   * site-config.js is already loaded by every Willow Lily page, so this makes
-   * the consent manager global without editing every HTML file.
-   */
-  if (!document.querySelector('link[data-consent-css]')) {
+  function addCss(href, key) {
+    if (document.querySelector(`link[data-${key}]`)) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/consent-manager.css';
-    link.dataset.consentCss = '';
+    link.href = href;
+    link.dataset[key] = '';
     document.head.appendChild(link);
   }
 
-  if (!document.querySelector('script[data-consent-script]')) {
+  function addScript(src, key) {
+    if (document.querySelector(`script[data-${key}]`)) return;
     const script = document.createElement('script');
-    script.src = '/consent-manager.js';
+    script.src = src;
     script.defer = true;
-    script.dataset.consentScript = '';
+    script.dataset[key] = '';
     document.head.appendChild(script);
   }
+
+  addCss('/consent-manager.css', 'consentCss');
+  addScript('/consent-manager.js', 'consentScript');
+  addScript('/consent-enforcement.js', 'consentEnforcement');
 })(window);

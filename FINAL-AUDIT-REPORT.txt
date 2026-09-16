@@ -1,0 +1,28 @@
+WILLOW LILY — FINAL THREE-PASS AUDIT
+
+AUDIT 1 — REGRESSION
+PASS — logo opening preserved
+PASS — hero video preserved
+PASS — quick-check preserved
+PASS — shared runtime preserved
+PASS — footer/persistent hooks preserved
+PASS — existing Riverside editorial preserved
+
+AUDIT 2 — FUNCTION
+PASS — no placeholder hash links
+PASS — build route present
+PASS — availability route present
+PASS — social links gated by HTTPS
+PASS — noopener on external links
+PASS — social config exists
+PASS — additive CSS linked
+
+AUDIT 3 — VISUAL / CONTENT
+PASS — old 72-hour language removed
+PASS — Friday arrival explicit
+PASS — Sunday departure explicit
+PASS — photographic itinerary
+PASS — three packages merchandised
+PASS — responsive rules included
+PASS — lazy loading used
+PASS — demo proof boundary retained

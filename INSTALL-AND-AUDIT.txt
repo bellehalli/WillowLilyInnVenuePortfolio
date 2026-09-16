@@ -1,0 +1,72 @@
+WILLOW LILY — CODE-ONLY 10/10 UPGRADE
+=========================================
+
+BASELINE
+- Built against branch: sprint-1-app-foundation
+- Media/assets are intentionally NOT included.
+- Existing assets in the repository are referenced by their current filenames.
+- This package is additive/surgical. It does not replace script.js, demo-model.js, icons.js,
+  seo.js, existing media, or the core styles.css.
+
+FILES TO REPLACE
+- index.html
+- weekend.html
+- site-config.js
+
+FILES TO ADD
+- premium-upgrades.css
+- social-trust.js
+
+WHAT CHANGED
+1. Preserved/restored the cinematic Willow Lily logo/estate opening.
+2. Replaced "72 hours" marketing shorthand with explicit Friday 11:00 AM → Sunday 11:00 AM language.
+3. Added a photographic, timed Full Weekend editorial sequence.
+4. Gave Sunday / One Day / Full Weekend equal package merchandising on the homepage.
+5. Clarified homepage CTA hierarchy: Build Your Wedding primary; Explore Estate secondary; date check contextual.
+6. Added production-ready Google Reviews / social / wedding-directory integration points.
+7. No fake social links or ratings: links render only after verified HTTPS URLs are entered in site-config.js.
+8. Kept all existing shared shell/runtime/state files untouched.
+
+PRODUCTION SOCIAL SETUP
+Edit site-config.js > social and paste verified URLs. Empty values render the intentional demo note.
+Supported: Google Reviews, Instagram, Facebook, TikTok, Pinterest, The Knot, WeddingWire.
+
+AUDIT 1 — REGRESSION / BASELINE
+PASS
+- Existing index shell/header/menu retained.
+- Existing estate-entry logo opening retained.
+- Existing hero video and poster retained.
+- Existing quick availability form retained.
+- Existing conversion path retained.
+- Existing Riverside editorial retained.
+- Existing proof story retained.
+- Existing closing invitation retained.
+- Existing shared footer/persistent UI hooks retained.
+- Existing script.js/demo-model.js/icons.js untouched.
+- No media deleted or renamed.
+
+AUDIT 2 — FUNCTION / ROUTES / ASSETS
+PASS (static code audit)
+- No "#" placeholder links introduced.
+- All new internal CTAs use existing route patterns.
+- All new media references use filenames already present in the audited branch tree.
+- Social links require valid http/https URLs before rendering.
+- External links use target=_blank + rel=noopener noreferrer.
+- Existing data-quick-check, data-shell, data-footer, data-persistent-ui, data-entry and data-enter hooks preserved.
+- New CSS is isolated in an additive stylesheet.
+- No parallel state/runtime introduced.
+
+AUDIT 3 — VISUAL / RESPONSIVE / CONTENT
+PASS (code-level regression audit)
+- Existing typography/color variables reused.
+- New layouts collapse to one column below 800px.
+- Images use loading=lazy below the fold.
+- New images have human-readable alt text; no filenames are exposed.
+- "72 hours" removed from upgraded homepage/weekend copy.
+- Exact arrival/departure times are visible.
+- Demo social proof cannot masquerade as verified real-world proof.
+- Full Weekend remains premium without visually hiding the $8K/$10K options.
+
+IMPORTANT
+This is a CODE-ONLY package. Keep all existing repository assets in place.
+Upload/replace these five files only. Do not delete the rest of the repository.

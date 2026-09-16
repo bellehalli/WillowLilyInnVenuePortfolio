@@ -4,7 +4,6 @@
  */
 (function (root) {
   'use strict';
-
   root.WillowSite = Object.freeze({
     mode: 'demonstration',
     name: 'Willow Lily Inn & Estate',
@@ -13,6 +12,15 @@
     region: 'Fenton, Michigan',
     canonicalOrigin: '',
     defaultImage: '/estate-landscape-01.AVIF',
+    social: Object.freeze({
+      googleReviews: '',
+      instagram: '',
+      facebook: '',
+      tiktok: '',
+      pinterest: '',
+      theKnot: '',
+      weddingWire: ''
+    }),
     production: Object.freeze({
       availability: 'Replace demo inventory with one authenticated source of truth.',
       leads: 'Replace session storage with a validated CRM or lead repository.',

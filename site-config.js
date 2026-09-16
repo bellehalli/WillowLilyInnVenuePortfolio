@@ -10,7 +10,7 @@
     shortName: 'Willow Lily',
     studio: 'A. Halliwell Studio',
     region: 'Fenton, Michigan',
-    canonicalOrigin: '',
+    canonicalOrigin: 'https://www.willowlilyestate.com',
     defaultImage: '/estate-landscape-01.AVIF',
     social: Object.freeze({
       googleReviews: '',
@@ -22,9 +22,10 @@
       weddingWire: ''
     }),
     production: Object.freeze({
-      availability: 'Replace demo inventory with one authenticated source of truth.',
-      leads: 'Replace session storage with a validated CRM or lead repository.',
-      messaging: 'Connect consent-aware transactional email and venue notifications.',
+      availability: 'Demo availability and venue CRM now share one inventory model. Production replaces that model with one authenticated server-backed source of truth.',
+      leads: 'The portfolio CRM uses local demonstration records. Production stores validated leads in an authenticated CRM/database.',
+      messaging: 'Resend venue-notification routing is connected for the portfolio demo. Production uses the client’s verified sending domain, consent rules and approved recipients.',
+      payments: 'Stripe TEST Checkout is connected. Production requires verified Checkout sessions, live-mode credentials and the venue’s approved contract/date-hold rules.',
       content: 'Load verified venue facts, policies, vendors and real weddings from a CMS.',
       security: 'Protect venue intelligence with authentication, roles and audit logging.'
     })

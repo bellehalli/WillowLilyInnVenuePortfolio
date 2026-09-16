@@ -1,4 +1,4 @@
-/* Metadata is centralized so a production launch can replace the fictional demo facts once. */
+/* Centralized metadata for the fictional Willow Lily portfolio demonstration. */
 (function () {
   'use strict';
 
@@ -26,10 +26,13 @@
     '/vendors': ['Vendor Planning Guide', 'Prepare the right questions for catering, photography, coordination and transportation partners.'],
     '/story': ['The Estate Story', 'Discover the fictional story and hospitality philosophy behind Willow Lily Inn & Estate.'],
     '/build': ['Build Your Willow Lily Wedding', 'Choose guests, ceremony, package, Inn experience, after-dark plans, season and preferred date.'],
-    '/availability': ['Check Wedding Availability', 'Check the Willow Lily demonstration calendar and recover nearby alternatives when a preferred weekend is unavailable.'],
-    '/visit': ['Request a Private Tour', 'Bring your wedding preferences into a qualified private-tour request. Demonstration requests are not sent.'],
-    '/privacy': ['Demonstration Privacy', 'Understand what this fictional venue demonstration stores locally and what is never transmitted.'],
-    '/venue-demo': ['Venue Intelligence Demonstration', 'A private demonstration of qualified venue leads, conversion journeys and unavailable-date recovery analytics.']
+    '/availability': ['Check Wedding Availability', 'Check the Willow Lily demonstration inventory and recover nearby alternatives when a preferred weekend is unavailable.'],
+    '/visit': ['Request a Private Tour', 'Bring your saved wedding preferences into a qualified private-tour request. This portfolio demo can route a venue notification through Resend.'],
+    '/privacy': ['Demonstration Privacy', 'Understand what this fictional venue demonstration stores locally and what its connected demo workflows transmit.'],
+    '/venue-demo': ['Venue Intelligence Demonstration', 'A private demonstration of qualified venue leads, CRM workflow, calendar operations and unavailable-date recovery analytics.'],
+    '/proposal': ['Proposal Workflow Demonstration', 'A fictional proposal and Stripe test-mode booking-deposit workflow.'],
+    '/deposit-success': ['Deposit Workflow Demonstration', 'Stripe test-mode checkout verification for the fictional Willow Lily booking workflow.'],
+    '/couple-demo': ['Couple Planning View Demonstration', 'A local demonstration of the couple-side planning record after the sales workflow.']
   };
 
   const [pageTitle, description] = routes[path] || [document.title, document.querySelector('meta[name="description"]')?.content || 'Explore Willow Lily Inn & Estate.'];
@@ -38,45 +41,50 @@
   const canonical = origin ? origin + path : path;
 
   document.title = title;
+
   const setMeta = (selector, attrs) => {
     let element = document.head.querySelector(selector);
     if (!element) {
-      element = document.createElement(attrs.property ? 'meta' : 'meta');
+      element = document.createElement('meta');
       document.head.append(element);
     }
     for (const [name, value] of Object.entries(attrs)) element.setAttribute(name, value);
   };
-  setMeta('meta[name="description"]', {name: 'description', content: description});
-  setMeta('meta[property="og:type"]', {property: 'og:type', content: 'website'});
-  setMeta('meta[property="og:title"]', {property: 'og:title', content: title});
-  setMeta('meta[property="og:description"]', {property: 'og:description', content: description});
-  setMeta('meta[property="og:url"]', {property: 'og:url', content: canonical});
-  setMeta('meta[name="twitter:card"]', {name: 'twitter:card', content: 'summary_large_image'});
-  setMeta('meta[name="twitter:title"]', {name: 'twitter:title', content: title});
-  setMeta('meta[name="twitter:description"]', {name: 'twitter:description', content: description});
 
-  let link = document.head.querySelector('link[rel="canonical"]');
-  if (!link) {
-    link = document.createElement('link');
-    link.rel = 'canonical';
+  setMeta('meta[name="description"]', {name:'description',content:description});
+  setMeta('meta[property="og:type"]', {property:'og:type',content:'website'});
+  setMeta('meta[property="og:title"]', {property:'og:title',content:title});
+  setMeta('meta[property="og:description"]', {property:'og:description',content:description});
+  setMeta('meta[property="og:url"]', {property:'og:url',content:canonical});
+  setMeta('meta[name="twitter:card"]', {name:'twitter:card',content:'summary_large_image'});
+  setMeta('meta[name="twitter:title"]', {name:'twitter:title',content:title});
+  setMeta('meta[name="twitter:description"]', {name:'twitter:description',content:description});
+
+  let link=document.head.querySelector('link[rel="canonical"]');
+  if(!link){
+    link=document.createElement('link');
+    link.rel='canonical';
     document.head.append(link);
   }
-  link.href = canonical;
+  link.href=canonical;
 
-  if (path === '/venue-demo') setMeta('meta[name="robots"]', {name: 'robots', content: 'noindex,nofollow'});
+  const privateDemoPaths=new Set(['/venue-demo','/proposal','/deposit-success','/couple-demo']);
+  if(privateDemoPaths.has(path)){
+    setMeta('meta[name="robots"]',{name:'robots',content:'noindex,nofollow'});
+  }
 
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: site.name || 'Willow Lily Inn & Estate',
+  const schema={
+    '@context':'https://schema.org',
+    '@type':'WebSite',
+    name:site.name||'Willow Lily Inn & Estate',
     description,
-    url: origin || canonical,
-    creator: {'@type': 'Organization', name: site.studio || 'A. Halliwell Studio'},
-    additionalType: 'https://schema.org/CreativeWork',
-    abstract: 'A fictional wedding venue sales-platform demonstration. It is not a live venue or booking service.'
+    url:origin||canonical,
+    creator:{'@type':'Organization',name:site.studio||'A. Halliwell Studio'},
+    additionalType:'https://schema.org/CreativeWork',
+    abstract:'A fictional wedding venue sales-platform demonstration. It is not a live venue or booking service.'
   };
-  const json = document.createElement('script');
-  json.type = 'application/ld+json';
-  json.textContent = JSON.stringify(schema).replace(/</g, '\\u003c');
+  const json=document.createElement('script');
+  json.type='application/ld+json';
+  json.textContent=JSON.stringify(schema).replace(/</g,'\\u003c');
   document.head.append(json);
 })();

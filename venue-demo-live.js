@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     link.dataset.venueCrmCss='';
     document.head.appendChild(link);
   }
-
   if(!document.querySelector('script[data-venue-crm-script]')){
     const script=document.createElement('script');
     script.src='/venue-crm.js';

@@ -1,0 +1,36 @@
+WILLOW LILY — CRM + CALENDAR V1
+
+TARGET BRANCH
+sprint-1-app-foundation
+
+UPLOAD / REPLACE
+1. venue-demo-live.js  (replace existing)
+2. venue-crm.js        (new)
+3. venue-crm.css       (new)
+
+DO NOT replace venue-demo.html.
+The existing venue-demo page already loads venue-demo-live.js.
+That bootstrap now loads the CRM/calendar assets automatically.
+
+WHAT THIS ADDS
+- Integrated venue CRM + calendar inside the EXISTING Venue Intelligence dashboard
+- Month navigation
+- Calendar filters for weddings, tours, holds and follow-ups
+- Booked wedding / tour / courtesy hold / payment / follow-up event types
+- Active lead pipeline
+- Lead detail drawer
+- Editable pipeline stage saved locally in the browser
+- Internal demo notes saved locally
+- "Add demo lead" flow saved locally
+- Live browser journey automatically appears when tour/wedding data exists
+- Existing visual dashboard stays intact
+
+IMPORTANT
+This is intentionally a portfolio CRM demonstration.
+The seeded weddings/leads are demonstration data.
+No real calendar, CRM database, customer records or authenticated staff access
+are represented as production-connected yet.
+
+NEXT PRODUCTION STEP
+Replace local/demo persistence with a server-backed data layer and authenticated
+venue access. Then availability can read the same calendar source of truth.

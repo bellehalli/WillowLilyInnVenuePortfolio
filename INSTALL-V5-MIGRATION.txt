@@ -1,0 +1,43 @@
+WILLOW LILY — V5 LEGACY SESSION MIGRATION
+
+REPLACE ONLY:
+live-sales-demo.js
+
+Target:
+sprint-1-app-foundation
+
+WHY THIS FIX IS NEEDED
+V4 fixed date continuity for NEW journeys, but your browser already had an
+older demo session saved under:
+  willow-lily-live-demo-v1
+
+V2/V4 intentionally unified the app onto:
+  willow-lily-visit-v2
+
+That means your existing Sarah + James session could still show
+"Date to be chosen" even though the new code was correct, because the selected
+date was stranded in the old session key.
+
+V5 MIGRATES OLD BROWSER DATA AUTOMATICALLY
+On page load it checks:
+- willow-lily-live-demo-v1
+- willow-lily-last-tour
+
+and migrates missing:
+- lead
+- tour
+- proposal
+- payment
+- wedding date snapshot
+- availability snapshot
+
+into willow-lily-visit-v2.
+
+This is migration/continuity only. No visual redesign.
+
+After uploading:
+1. Wait for Vercel preview to finish.
+2. Refresh /couple-demo on the SAME sprint preview domain.
+3. If the old session contained October 23, 2027, it should appear immediately.
+4. If the old session never stored a date at all, run Availability once and
+   accept the date; from that point V4/V5 will preserve it through the flow.

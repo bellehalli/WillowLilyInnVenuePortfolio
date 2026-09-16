@@ -5,6 +5,7 @@ const LOCAL_KEY='willow-lily-v2';
 /* Unified with the existing Willow Lily runtime so the dashboard, tour,
    proposal, payment and couple view all read the same browser session. */
 const SESSION_KEY='willow-lily-visit-v2';
+const LEGACY_SESSION_KEY='willow-lily-live-demo-v1';
 
 const $=(s,c=document)=>c.querySelector(s);
 const $$=(s,c=document)=>[...c.querySelectorAll(s)];
@@ -19,6 +20,52 @@ const saveDemo=patch=>{
   writeJSON(sessionStorage,SESSION_KEY,next);
   return next;
 };
+function migrateLegacySession(){
+  const current=readJSON(sessionStorage,SESSION_KEY,{});
+  const legacy=readJSON(sessionStorage,LEGACY_SESSION_KEY,{});
+  const lastTour=readJSON(sessionStorage,'willow-lily-last-tour',null);
+
+  const hasCurrentDate=
+    current?.weddingSnapshot?.selectedDate||
+    current?.weddingSnapshot?.date||
+    current?.availabilitySnapshot?.finalDate||
+    current?.availabilitySnapshot?.acceptedAlternative;
+
+  const legacyLead=legacy?.lead||lastTour||null;
+  const legacyWedding=legacy?.weddingSnapshot||legacyLead?.wedding||{};
+  const legacyAvailability=legacy?.availabilitySnapshot||{};
+
+  const migratedDate=
+    legacyAvailability.finalDate||
+    legacyAvailability.acceptedAlternative||
+    legacyWedding.selectedDate||
+    legacyWedding.originalDate||
+    legacyWedding.date||
+    '';
+
+  const patch={};
+
+  if(!current.lead && legacyLead) patch.lead=legacyLead;
+  if(!current.tour && legacy?.tour) patch.tour=legacy.tour;
+  if(!current.proposal && legacy?.proposal) patch.proposal=legacy.proposal;
+  if(!current.payment && legacy?.payment) patch.payment=legacy.payment;
+
+  if(!hasCurrentDate && migratedDate){
+    patch.weddingSnapshot={
+      ...(current.weddingSnapshot||{}),
+      ...legacyWedding,
+      date:migratedDate,
+      selectedDate:migratedDate
+    };
+    patch.availabilitySnapshot={
+      ...(current.availabilitySnapshot||{}),
+      ...legacyAvailability
+    };
+  }
+
+  if(Object.keys(patch).length) saveDemo(patch);
+}
+
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(n)||0);
 const fmt=d=>{
@@ -386,6 +433,7 @@ function correctVisibleDemoCopy(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  migrateLegacySession();
   initTour();
   initProposal();
   initSuccess();

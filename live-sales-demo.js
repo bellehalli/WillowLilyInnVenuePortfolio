@@ -32,13 +32,11 @@ function nextTourDates(count=6){
   const out=[],d=today();
   d.setDate(d.getDate()+1);
   while(out.length<count){
-    const dow=d.getDay();
-    // Demonstration operating hours: Thu evening + Sat daytime.
-    if(dow===4||dow===6){
+    if(d.getDay()===6){
       out.push({
         iso:d.toISOString().slice(0,10),
         label:new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(d),
-        times:dow===4?['5:00 PM','6:15 PM']:['10:00 AM','11:30 AM','1:00 PM','2:30 PM']
+        times:['11:00 AM','12:00 PM','1:00 PM']
       });
     }
     d.setDate(d.getDate()+1);

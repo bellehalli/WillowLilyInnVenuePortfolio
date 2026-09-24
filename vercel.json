@@ -31,8 +31,8 @@
           "value": "camera=(), microphone=(), geolocation=()"
         },
         {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://www.ahalliwellstudio.com https://ahalliwellstudio.com"
         }
       ]
     }

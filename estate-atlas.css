@@ -13,3 +13,6 @@
 @media(prefers-reduced-motion:reduce){.atlas-canvas,.atlas-pin{transition:none}}
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.atlas-detail-art{position:relative;height:180px;overflow:hidden;margin:0 0 18px;background:#eeeadd}.atlas-panel .atlas-detail-art img{position:absolute;left:50%;top:50%;width:400%;max-width:none;height:auto;margin:0;object-fit:initial}
+@media(max-width:760px){.atlas-detail-art{height:160px}}
